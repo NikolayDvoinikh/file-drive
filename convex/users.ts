@@ -10,12 +10,14 @@ export async function getUser(
   ctx: QueryCtx | MutationCtx,
   tokenIdentifier: string
 ) {
+  console.log(tokenIdentifier);
   const user = await ctx.db
     .query("users")
     .withIndex("by_tokenIdentifier", (q) =>
       q.eq("tokenIdentifier", tokenIdentifier)
     )
     .first();
+  // console.log(user);
 
   if (!user) {
     throw new ConvexError("expected user to be defined");
@@ -64,7 +66,7 @@ export const addOrgIdToUser = internalMutation({
     const user = await getUser(ctx, args.tokenIdentifier);
 
     await ctx.db.patch(user._id, {
-      orgIds: [...user.orgIds, args.tokenIdentifier],
+      orgIds: [...user.orgIds, args.orgId],
     });
   },
 });
