@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -49,9 +50,9 @@ export default function Home() {
   });
 
   const fileRef = form.register("file");
+  const createFile = useMutation(api.files.createFile);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     if (!orgId) return;
 
     const postUrl = await generateUploadUrl();
@@ -64,7 +65,14 @@ export default function Home() {
 
     const { storageId } = await result.json();
 
-    createFile({ name: values.title, orgId });
+    await createFile({
+      name: values.title,
+      fileId: storageId,
+      orgId,
+    });
+    form.reset();
+
+    setIsFileDialogOpen(false);
   }
 
   let orgId: string | undefined;
@@ -72,13 +80,14 @@ export default function Home() {
     orgId = organization.organization?.id ?? user.user?.id;
   }
 
+  const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
+
   const files = useQuery(api.files.getFiles, orgId ? { orgId } : "skip");
-  const createFile = useMutation(api.files.createFile);
   return (
     <main className="container mx-auto pt-12">
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold">Your Files</h1>
-        <Dialog>
+        <Dialog open={isFileDialogOpen} onOpenChange={setIsFileDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={() => {}}>Upload File</Button>
           </DialogTrigger>
