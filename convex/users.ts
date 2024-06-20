@@ -10,14 +10,12 @@ export async function getUser(
   ctx: QueryCtx | MutationCtx,
   tokenIdentifier: string
 ) {
-  console.log(tokenIdentifier);
   const user = await ctx.db
     .query("users")
     .withIndex("by_tokenIdentifier", (q) =>
       q.eq("tokenIdentifier", tokenIdentifier)
     )
     .first();
-  // console.log(user);
 
   if (!user) {
     throw new ConvexError("expected user to be defined");
