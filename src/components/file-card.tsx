@@ -28,7 +28,7 @@ const FileCard = ({ file }: { file: Doc<"files"> }) => {
   } as Record<Doc<"files">["type"], ReactNode>;
 
   return (
-    <Card className="max-w-72 xs:w-full">
+    <Card className="max-w-72 w-full">
       <CardHeader className="relative">
         <CardTitle className="flex gap-2">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
@@ -40,11 +40,10 @@ const FileCard = ({ file }: { file: Doc<"files"> }) => {
         <CardDescription>{file._creationTime}</CardDescription>
       </CardHeader>
       <CardContent className="h-52 flex justify-center items-center">
-        {file.type === "pdf" ||
-          (file.type === "image" && (
-            <Image alt={file.name} width={200} height={100} src={file.url} />
-          ))}
-        {/* {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />} */}
+        {file.type === "image" && (
+          <Image alt={file.name} width={200} height={100} src={file.url} />
+        )}
+        {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
         {file.type === "xlsx" && <FileSpreadsheetIcon className="w-20 h-20" />}
         {file.type === "docs" && <BookTypeIcon className="w-20 h-20" />}
       </CardContent>
