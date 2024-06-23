@@ -1,11 +1,20 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+export const fileTypes = v.union(
+  v.literal("image"),
+  v.literal("xlsx"),
+  v.literal("pdf"),
+  v.literal("docs")
+);
+
 export default defineSchema({
   files: defineTable({
     name: v.string(),
+    type: fileTypes,
     fileId: v.id("_storage"),
     orgId: v.string(),
+    url: v.string(),
   }).index("by_orgId", ["orgId"]),
   users: defineTable({
     tokenIdentifier: v.string(),
