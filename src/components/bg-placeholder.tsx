@@ -1,7 +1,7 @@
 import Image from "next/image";
 import UploadButton from "./upload-button";
 
-const BgPlaceholder = () => {
+export default function BgPlaceholder() {
   return (
     <div className="flex flex-col gap-8 w-full items-center mt-24">
       <Image
@@ -14,6 +14,4 @@ const BgPlaceholder = () => {
       <UploadButton />
     </div>
   );
-};
-
-export default BgPlaceholder;
+}

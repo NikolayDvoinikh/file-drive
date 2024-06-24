@@ -5,9 +5,9 @@ import {
   SignInButton,
 } from "@clerk/nextjs";
 import { Button } from "./ui/button";
-import Logo from "./Logo";
+import Logo from "./logo";
 
-const Header = () => {
+export default function Header() {
   return (
     <header className="border-b py-5 sm:py-4 bg-gray-50">
       <div className="container mx-auto flex justify-between items-center">
@@ -24,6 +24,4 @@ const Header = () => {
       </div>
     </header>
   );
-};
-
-export default Header;
+}
