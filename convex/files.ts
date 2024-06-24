@@ -4,17 +4,51 @@ import { getUser } from "./users";
 import { fileTypes } from "./schema";
 import { Id } from "./_generated/dataModel";
 
-async function hasAccessToOrg(
-  ctx: QueryCtx | MutationCtx,
-  tokenIdentifier: string,
-  orgId: string
-) {
-  const user = await getUser(ctx, tokenIdentifier);
+async function hasAccessToOrg(ctx: QueryCtx | MutationCtx, orgId: string) {
+  const identity = await ctx.auth.getUserIdentity();
+
+  if (!identity) {
+    return null;
+  }
+
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_tokenIdentifier", (q) =>
+      q.eq("tokenIdentifier", identity.tokenIdentifier)
+    )
+    .first();
+
+  if (!user) {
+    return null;
+  }
 
   const hasAccess =
-    user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
+    user.orgIds.some((item) => item.includes(orgId)) ||
+    user.tokenIdentifier.includes(orgId);
 
-  return hasAccess;
+  if (!hasAccess) {
+    return null;
+  }
+  return { user };
+}
+
+async function hasAccessToFile(
+  ctx: QueryCtx | MutationCtx,
+  fileId: Id<"files">
+) {
+  const file = await ctx.db.get(fileId);
+
+  if (!file) {
+    return null;
+  }
+
+  const hasAccess = await hasAccessToOrg(ctx, file.orgId);
+
+  if (!hasAccess) {
+    return null;
+  }
+
+  return { user: hasAccess.user, file };
 }
 
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -35,17 +69,7 @@ export const createFile = mutation({
     type: fileTypes,
   },
   async handler(ctx, args) {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new ConvexError("Log in to upload a file");
-    }
-
-    const hasAccess = await hasAccessToOrg(
-      ctx,
-      identity.tokenIdentifier,
-      args.orgId
-    );
+    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
     if (!hasAccess) {
       throw new ConvexError("You don't have access to this organization");
@@ -74,16 +98,7 @@ export const getFiles = query({
     favorites: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
-
-    const hasAccess = await hasAccessToOrg(
-      ctx,
-      identity.tokenIdentifier,
-      args.orgId
-    );
+    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
     if (!hasAccess) {
       [];
@@ -100,33 +115,11 @@ export const getFiles = query({
       );
     }
 
-    // const user = await ctx.db
-    //   .query("users")
-    //   .withIndex("by_tokenIdentifier", (q) =>
-    //     q.eq("tokenIdentifier", identity.tokenIdentifier)
-    //   )
-    //   .first();
-
-    // if (!user) {
-    //   return null;
-    // }
-
     if (args.favorites) {
-      const user = await ctx.db
-        .query("users")
-        .withIndex("by_tokenIdentifier", (q) =>
-          q.eq("tokenIdentifier", identity.tokenIdentifier)
-        )
-        .first();
-
-      if (!user) {
-        return files;
-      }
-
       const favorites = await ctx.db
         .query("favorites")
         .withIndex("by_userId_orgId_fileId", (q) =>
-          q.eq("userId", user._id).eq("orgId", args.orgId)
+          q.eq("userId", hasAccess!.user._id).eq("orgId", args.orgId)
         )
         .collect();
       files = files.filter((file) =>
@@ -140,21 +133,22 @@ export const getFiles = query({
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   async handler(ctx, args) {
-    const access = await hasAccessTofile(ctx, args.fileId);
-    if (!access) {
+    const hasAccess = await hasAccessToFile(ctx, args.fileId);
+
+    if (!hasAccess) {
       throw new ConvexError("No access to file");
     }
 
     await ctx.db.delete(args.fileId);
-    await ctx.storage.delete(access.file.fileId);
+    await ctx.storage.delete(hasAccess.file.fileId);
   },
 });
 
 export const toggleFavorite = mutation({
   args: { fileId: v.id("files") },
   async handler(ctx, args) {
-    const access = await hasAccessTofile(ctx, args.fileId);
-    if (!access) {
+    const hasAccess = await hasAccessToFile(ctx, args.fileId);
+    if (!hasAccess) {
       throw new ConvexError("No access to file");
     }
 
@@ -162,16 +156,16 @@ export const toggleFavorite = mutation({
       .query("favorites")
       .withIndex("by_userId_orgId_fileId", (q) =>
         q
-          .eq("userId", access.user._id)
-          .eq("orgId", access.file.orgId)
-          .eq("fileId", access.file._id)
+          .eq("userId", hasAccess.user._id)
+          .eq("orgId", hasAccess.file.orgId)
+          .eq("fileId", hasAccess.file._id)
       )
       .first();
     if (!favorite) {
       await ctx.db.insert("favorites", {
-        fileId: access.file._id,
-        userId: access.user._id,
-        orgId: access.file.orgId,
+        fileId: hasAccess.file._id,
+        userId: hasAccess.user._id,
+        orgId: hasAccess.file.orgId,
       });
     } else {
       await ctx.db.delete(favorite._id);
@@ -179,40 +173,21 @@ export const toggleFavorite = mutation({
   },
 });
 
-async function hasAccessTofile(
-  ctx: QueryCtx | MutationCtx,
-  fileId: Id<"files">
-) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) {
-    return null;
-  }
+export const getAllFavorites = query({
+  args: { orgId: v.string() },
+  async handler(ctx, args) {
+    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
+    if (!hasAccess) {
+      return [];
+    }
 
-  const file = await ctx.db.get(fileId);
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_userId_orgId_fileId", (q) =>
+        q.eq("userId", hasAccess.user._id).eq("orgId", args.orgId)
+      )
+      .collect();
 
-  if (!file) {
-    return null;
-  }
-
-  const hasAccess = await hasAccessToOrg(
-    ctx,
-    identity.tokenIdentifier,
-    file.orgId
-  );
-
-  if (!hasAccess) {
-    return null;
-  }
-
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_tokenIdentifier", (q) =>
-      q.eq("tokenIdentifier", identity.tokenIdentifier)
-    )
-    .first();
-
-  if (!user) {
-    return null;
-  }
-  return { user, file };
-}
+    return favorites;
+  },
+});

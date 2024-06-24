@@ -19,7 +19,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-const FileCard = ({ file }: { file: Doc<"files"> }) => {
+const FileCard = ({
+  file,
+  favorites,
+}: {
+  file: Doc<"files">;
+  favorites: Doc<"favorites">[];
+}) => {
   const typeIcons = {
     image: <ImageIcon />,
     pdf: <FileTextIcon />,
@@ -27,17 +33,21 @@ const FileCard = ({ file }: { file: Doc<"files"> }) => {
     docs: <BookTypeIcon />,
   } as Record<Doc<"files">["type"], ReactNode>;
 
+  const isFavorited = favorites.some(
+    (favorite) => favorite.fileId === file._id
+  );
+
   return (
     <Card>
-      <CardHeader className="relative">
+      <CardHeader className="relative mb-2">
         <CardTitle className="flex gap-2">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
-          <FileCardActions file={file} />
+          <FileCardActions isFavorited={isFavorited} file={file} />
         </div>
-        <CardDescription>{file._creationTime}</CardDescription>
+        {/* <CardDescription>{file._creationTime}</CardDescription> */}
       </CardHeader>
       <CardContent className="h-52 flex justify-center items-center">
         {file.type === "image" && (

@@ -6,19 +6,17 @@ import { api } from "../../convex/_generated/api";
 
 import UploadButton from "@/components/upload-button";
 import FileCard from "@/components/file-card";
-import { FileIcon, Loader2, StarIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import SearchBar from "@/components/SearchBar";
 import { useState } from "react";
 import BgPlaceholder from "@/components/BgPlaceholder";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default function FileBrowser({
   title,
-  favorites,
+  favoritesOnly,
 }: {
   title: string;
-  favorites?: boolean;
+  favoritesOnly?: boolean;
 }) {
   const organization = useOrganization();
   const user = useUser();
@@ -28,9 +26,15 @@ export default function FileBrowser({
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
+
+  const favorites = useQuery(
+    api.files.getAllFavorites,
+    orgId ? { orgId } : "skip"
+  );
+
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites } : "skip"
+    orgId ? { orgId, query, favorites: favoritesOnly } : "skip"
   );
   const isLoading = files === undefined;
 
@@ -52,7 +56,13 @@ export default function FileBrowser({
           </div>
           {files?.length === 0 && <BgPlaceholder />}
           <div className="grid xs:grid-cols-2 sm:grid-cols-3 gap-4">
-            {files?.map((file) => <FileCard key={file._id} file={file} />)}
+            {files?.map((file) => (
+              <FileCard
+                favorites={favorites ?? []}
+                key={file._id}
+                file={file}
+              />
+            ))}
           </div>
         </>
       )}

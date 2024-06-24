@@ -17,14 +17,20 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { MoreVertical, StarIcon, TrashIcon } from "lucide-react";
+import { MoreVertical, StarHalf, StarIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
 import { useMutation } from "convex/react";
 import { Doc } from "../../convex/_generated/dataModel";
 import { useToast } from "./ui/use-toast";
 
-const FileCardActions = ({ file }: { file: Doc<"files"> }) => {
+const FileCardActions = ({
+  file,
+  isFavorited,
+}: {
+  file: Doc<"files">;
+  isFavorited: boolean;
+}) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { toast } = useToast();
 
@@ -70,8 +76,15 @@ const FileCardActions = ({ file }: { file: Doc<"files"> }) => {
             }}
             className="flex gap-1 items-center cursor-pointer"
           >
-            <StarIcon className="w-4 h-4" />
-            Favorite
+            {isFavorited ? (
+              <div className="flex gap-1 items-center">
+                <StarIcon className="w-4 h-4" /> Unfavorite
+              </div>
+            ) : (
+              <div className="flex gap-1 items-center">
+                <StarHalf className="w-4 h-4" /> Favorite
+              </div>
+            )}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
