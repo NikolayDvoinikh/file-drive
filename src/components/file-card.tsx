@@ -28,7 +28,7 @@ const FileCard = ({ file }: { file: Doc<"files"> }) => {
   } as Record<Doc<"files">["type"], ReactNode>;
 
   return (
-    <Card className="max-w-72 w-full">
+    <Card>
       <CardHeader className="relative">
         <CardTitle className="flex gap-2">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
