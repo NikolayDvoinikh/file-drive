@@ -41,7 +41,7 @@ const SearchBar = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex gap-2 items-center"
+          className="flex gap-4 flex-col xs:flex-row xs:gap-2 items-center"
         >
           <FormField
             control={form.control}
@@ -65,7 +65,7 @@ const SearchBar = ({
               <Loader2 className="h-4 w-4 animate-spin" />
             )}
             <SearchIcon />
-            Search
+            {"Search"}
           </Button>
         </form>
       </Form>
