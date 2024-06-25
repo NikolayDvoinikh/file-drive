@@ -1,10 +1,11 @@
-import pic from "../../public/logo.png";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Logo() {
   return (
-    <a href="/">
+    <Link href="/">
       <div className="flex items-end gap-1">
-        <img src={pic.src} alt="logo" width={40} />
+        <Image src="/logo.png" alt="logo" width={40} height={40} />
         <div className="hidden sm:flex flex-col">
           <span className="leading-none text-xs text-[rgb(14,40,63)] font-['Ropa_Sans'] tracking-[3px]">
             NIKOLAY
@@ -14,6 +15,6 @@ export default function Logo() {
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

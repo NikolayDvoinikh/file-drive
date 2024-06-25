@@ -10,13 +10,17 @@ import { Loader2 } from "lucide-react";
 import SearchBar from "@/components/search-bar";
 import { useState } from "react";
 import BgPlaceholder from "@/components/bg-placeholder";
+import { DataTable } from "./file-table";
+import { columns } from "./columns";
 
 export default function FileBrowser({
   title,
   favoritesOnly,
+  deletedOnly,
 }: {
   title: string;
   favoritesOnly?: boolean;
+  deletedOnly?: boolean;
 }) {
   const organization = useOrganization();
   const user = useUser();
@@ -34,8 +38,9 @@ export default function FileBrowser({
 
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly } : "skip"
+    orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : "skip"
   );
+
   const isLoading = files === undefined;
 
   return (
@@ -55,7 +60,8 @@ export default function FileBrowser({
             <UploadButton />
           </div>
           {files?.length === 0 && <BgPlaceholder />}
-          <div className="grid xs:grid-cols-2 sm:grid-cols-3 gap-4">
+          <DataTable columns={columns} data={files} />
+          <div className="grid xs:grid-cols-2 md:grid-cols-3 gap-4">
             {files?.map((file) => (
               <FileCard
                 favorites={favorites ?? []}

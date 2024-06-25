@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
-import { FileIcon, StarIcon } from "lucide-react";
+import { FileIcon, StarIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -16,6 +16,11 @@ const routes = [
     name: "Favorites",
     path: "/dashboard/favorites",
     icon: StarIcon,
+  },
+  {
+    name: "Trash",
+    path: "/dashboard/trash",
+    icon: Trash2Icon,
   },
 ];
 
