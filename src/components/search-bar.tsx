@@ -41,7 +41,7 @@ export default function SearchBar({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex gap-4 flex-col xs:flex-row xs:gap-2 items-center"
+          className="relative flex gap-4 flex-col xs:flex-row xs:gap-2 items-center"
         >
           <FormField
             control={form.control}
@@ -57,9 +57,10 @@ export default function SearchBar({
           />
 
           <Button
+            variant="secondary"
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="w-10 h-10 p-0"
+            className="w-10 h-10 p-0 absolute right-0"
           >
             {form.formState.isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin" />
