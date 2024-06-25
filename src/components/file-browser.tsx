@@ -7,9 +7,9 @@ import { api } from "../../convex/_generated/api";
 import UploadButton from "@/components/upload-button";
 import FileCard from "@/components/file-card";
 import { Loader2 } from "lucide-react";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/search-bar";
 import { useState } from "react";
-import BgPlaceholder from "@/components/BgPlaceholder";
+import BgPlaceholder from "@/components/bg-placeholder";
 
 export default function FileBrowser({
   title,

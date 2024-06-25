@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Doc, Id } from "../../convex/_generated/dataModel";
 import { Button } from "./ui/button";
 import FileCardActions from "./file-card-actions";
@@ -19,13 +19,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-const FileCard = ({
+export default function FileCard({
   file,
   favorites,
 }: {
   file: Doc<"files">;
   favorites: Doc<"favorites">[];
-}) => {
+}) {
   const typeIcons = {
     image: <ImageIcon />,
     pdf: <FileTextIcon />,
@@ -69,6 +69,4 @@ const FileCard = ({
       </CardFooter>
     </Card>
   );
-};
-
-export default FileCard;
+}

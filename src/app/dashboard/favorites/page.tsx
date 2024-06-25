@@ -2,12 +2,10 @@
 
 import FileBrowser from "@/components/file-browser";
 
-const FavoritesPage = () => {
+export default function FavoritesPage() {
   return (
     <div>
       <FileBrowser title="Favorites" favoritesOnly />
     </div>
   );
-};
-
-export default FavoritesPage;
+}

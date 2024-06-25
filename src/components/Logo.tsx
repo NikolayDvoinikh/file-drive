@@ -1,6 +1,6 @@
 import pic from "../../public/logo.png";
 
-const Logo = () => {
+export default function Logo() {
   return (
     <a href="/">
       <div className="flex items-end gap-1">
@@ -16,6 +16,4 @@ const Logo = () => {
       </div>
     </a>
   );
-};
-
-export default Logo;
+}

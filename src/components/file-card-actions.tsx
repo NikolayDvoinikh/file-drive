@@ -23,14 +23,15 @@ import { api } from "../../convex/_generated/api";
 import { useMutation } from "convex/react";
 import { Doc } from "../../convex/_generated/dataModel";
 import { useToast } from "./ui/use-toast";
+import { Protect } from "@clerk/nextjs";
 
-const FileCardActions = ({
+export default function FileCardActions({
   file,
   isFavorited,
 }: {
   file: Doc<"files">;
   isFavorited: boolean;
-}) => {
+}) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { toast } = useToast();
 
@@ -78,7 +79,11 @@ const FileCardActions = ({
           >
             {isFavorited ? (
               <div className="flex gap-1 items-center">
-                <StarIcon className="w-4 h-4" /> Unfavorite
+                <StarIcon
+                  className="w-4 h-4 fill-amber-600 text-pink-800"
+                  // color="#9d174d"
+                />{" "}
+                Unfavorite
               </div>
             ) : (
               <div className="flex gap-1 items-center">
@@ -87,6 +92,7 @@ const FileCardActions = ({
             )}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          {/* <Protect role="org:admin" fallback={<></>}> */}
           <DropdownMenuItem
             onClick={() => setIsConfirmOpen(true)}
             className="flex gap-1 items-center text-red-600 cursor-pointer"
@@ -94,10 +100,9 @@ const FileCardActions = ({
             <TrashIcon className="w-4 h-4" />
             Delete
           </DropdownMenuItem>
+          {/* </Protect> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
   );
-};
-
-export default FileCardActions;
+}
