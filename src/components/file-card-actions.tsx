@@ -79,7 +79,11 @@ export default function FileCardActions({
           >
             {isFavorited ? (
               <div className="flex gap-1 items-center">
-                <StarIcon className="w-4 h-4" /> Unfavorite
+                <StarIcon
+                  className="w-4 h-4 fill-amber-600 text-pink-800"
+                  // color="#9d174d"
+                />{" "}
+                Unfavorite
               </div>
             ) : (
               <div className="flex gap-1 items-center">
@@ -88,15 +92,15 @@ export default function FileCardActions({
             )}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <Protect role="org:admin" fallback={<></>}>
-            <DropdownMenuItem
-              onClick={() => setIsConfirmOpen(true)}
-              className="flex gap-1 items-center text-red-600 cursor-pointer"
-            >
-              <TrashIcon className="w-4 h-4" />
-              Delete
-            </DropdownMenuItem>
-          </Protect>
+          {/* <Protect role="org:admin" fallback={<></>}> */}
+          <DropdownMenuItem
+            onClick={() => setIsConfirmOpen(true)}
+            className="flex gap-1 items-center text-red-600 cursor-pointer"
+          >
+            <TrashIcon className="w-4 h-4" />
+            Delete
+          </DropdownMenuItem>
+          {/* </Protect> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

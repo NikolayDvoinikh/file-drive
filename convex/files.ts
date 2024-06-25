@@ -3,6 +3,7 @@ import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server";
 import { getUser } from "./users";
 import { fileTypes } from "./schema";
 import { Id } from "./_generated/dataModel";
+import { access } from "fs";
 
 async function hasAccessToOrg(ctx: QueryCtx | MutationCtx, orgId: string) {
   const identity = await ctx.auth.getUserIdentity();
@@ -137,6 +138,14 @@ export const deleteFile = mutation({
 
     if (!hasAccess) {
       throw new ConvexError("No access to file");
+    }
+
+    const isAdmin =
+      hasAccess.user.orgIds.find((org) => org.orgId === hasAccess.file.orgId)
+        ?.role === "admin";
+
+    if (!isAdmin) {
+      throw new ConvexError("Only admin can delete files");
     }
 
     await ctx.db.delete(args.fileId);

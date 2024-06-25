@@ -59,7 +59,7 @@ export default function SearchBar({
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="flex gap-1"
+            className="w-10 h-10 p-0"
           >
             {form.formState.isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin" />

@@ -40,6 +40,13 @@ http.route({
             role: result.data.role === "admin" ? "admin" : "member",
           });
           break;
+        case "organizationMembership.updated":
+          await ctx.runMutation(internal.users.updateRoleInOrgForUser, {
+            tokenIdentifier: `https://pleasant-phoenix-81.clerk.accounts.dev|${result.data.public_user_data.user_id}`,
+            orgId: result.data.organization.id,
+            role: result.data.role === "org:admin" ? "admin" : "member",
+          });
+          break;
       }
 
       return new Response(null, {
