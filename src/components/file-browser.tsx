@@ -13,6 +13,13 @@ import BgPlaceholder from "@/components/bg-placeholder";
 import { DataTable } from "./file-table";
 import { columns } from "./columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function FileBrowser({
   title,
@@ -26,6 +33,7 @@ export default function FileBrowser({
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
+  const [type, setType] = useState("all");
 
   let orgId: string | undefined;
   if (organization.isLoaded && user.isLoaded) {
@@ -61,16 +69,32 @@ export default function FileBrowser({
       </div>
 
       <Tabs defaultValue="grid">
-        <TabsList className="mb-4">
-          <TabsTrigger value="grid" className="flex gap-2 items-center">
-            <GridIcon />
-            Grid
-          </TabsTrigger>
-          <TabsTrigger value="table" className="flex gap-2 items-center">
-            <RowsIcon />
-            Table
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex justify-between">
+          <TabsList className="mb-4">
+            <TabsTrigger value="grid" className="flex gap-2 items-center">
+              <GridIcon />
+              Grid
+            </TabsTrigger>
+            <TabsTrigger value="table" className="flex gap-2">
+              <RowsIcon />
+              Table
+            </TabsTrigger>
+          </TabsList>
+
+          <div>
+            <Select value={type} onValueChange={setType}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="xlsx">XLSX</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
         {isLoading && (
           <div className="flex flex-col gap-8 w-full items-center mt-24">
