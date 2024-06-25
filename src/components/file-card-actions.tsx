@@ -17,7 +17,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { MoreVertical, StarHalf, StarIcon, TrashIcon } from "lucide-react";
+import {
+  FileIcon,
+  MoreVertical,
+  StarHalf,
+  StarIcon,
+  TrashIcon,
+  UndoIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
 import { useMutation } from "convex/react";
@@ -36,6 +43,7 @@ export default function FileCardActions({
   const { toast } = useToast();
 
   const deleteFile = useMutation(api.files.deleteFile);
+  const restoreFile = useMutation(api.files.restoreFile);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
 
   return (
@@ -45,8 +53,8 @@ export default function FileCardActions({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action will mark the file for our deletion process. Files are
+              deleted periodically.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -56,8 +64,8 @@ export default function FileCardActions({
                 await deleteFile({ fileId: file._id });
                 toast({
                   variant: "default",
-                  title: "File deleted",
-                  description: "Your file is removed from the system",
+                  title: "File marked for deletion",
+                  description: "Your file will be deleted soon",
                 });
               }}
             >
@@ -73,16 +81,22 @@ export default function FileCardActions({
         <DropdownMenuContent>
           <DropdownMenuItem
             onClick={() => {
+              window.open(file.url, "_blank");
+            }}
+            className="flex gap-1 items-center cursor-pointer"
+          >
+            <FileIcon className="w-4 h-4" /> Download
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
               toggleFavorite({ fileId: file._id });
             }}
             className="flex gap-1 items-center cursor-pointer"
           >
             {isFavorited ? (
               <div className="flex gap-1 items-center">
-                <StarIcon
-                  className="w-4 h-4 fill-amber-600 text-pink-800"
-                  // color="#9d174d"
-                />{" "}
+                <StarIcon className="w-4 h-4 fill-amber-600 text-pink-800" />
                 Unfavorite
               </div>
             ) : (
@@ -92,15 +106,28 @@ export default function FileCardActions({
             )}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {/* <Protect role="org:admin" fallback={<></>}> */}
-          <DropdownMenuItem
-            onClick={() => setIsConfirmOpen(true)}
-            className="flex gap-1 items-center text-red-600 cursor-pointer"
-          >
-            <TrashIcon className="w-4 h-4" />
-            Delete
-          </DropdownMenuItem>
-          {/* </Protect> */}
+          <Protect role="org:admin" fallback={<></>}>
+            <DropdownMenuItem
+              onClick={() => {
+                if (file.shouldDelete) {
+                  restoreFile({ fileId: file._id });
+                } else {
+                  setIsConfirmOpen(true);
+                }
+              }}
+              className="cursor-pointer"
+            >
+              {file.shouldDelete ? (
+                <div className="flex gap-1 items-center text-green-600">
+                  <UndoIcon className="w-4 h-4" /> Restore
+                </div>
+              ) : (
+                <div className="flex gap-1 items-center text-red-600">
+                  <TrashIcon className="w-4 h-4" /> Delete
+                </div>
+              )}
+            </DropdownMenuItem>
+          </Protect>
         </DropdownMenuContent>
       </DropdownMenu>
     </>
