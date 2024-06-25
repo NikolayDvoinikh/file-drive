@@ -32,18 +32,12 @@ const typeIcons = {
 
 export default function FileCard({
   file,
-  favorites,
 }: {
-  file: Doc<"files">;
-  favorites: Doc<"favorites">[];
+  file: Doc<"files"> & { isFavorited: boolean };
 }) {
   const userProfile = useQuery(api.users.getUserPofile, {
     userId: file.userId,
   });
-
-  const isFavorited = favorites.some(
-    (favorite) => favorite.fileId === file._id
-  );
 
   return (
     <Card>
@@ -53,11 +47,10 @@ export default function FileCard({
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
-          <FileCardActions isFavorited={isFavorited} file={file} />
+          <FileCardActions isFavorited={file.isFavorited} file={file} />
         </div>
-        {/* <CardDescription>{file._creationTime}</CardDescription> */}
       </CardHeader>
-      <CardContent className="h-52 flex justify-center items-center">
+      <CardContent className="h-25 flex justify-center items-center">
         {file.type === "image" && (
           <Image alt={file.name} width={200} height={100} src={file.url} />
         )}
@@ -73,8 +66,8 @@ export default function FileCard({
           </Avatar>
           {userProfile?.name}
         </div>
-        <div className="text-xs text-gray-700">
-          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
+        <div className="text-xs text-gray-700 capitalize">
+          {formatRelative(new Date(file._creationTime), new Date())}
         </div>
       </CardFooter>
     </Card>

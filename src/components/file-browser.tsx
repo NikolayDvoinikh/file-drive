@@ -36,12 +36,21 @@ export default function FileBrowser({
     orgId ? { orgId } : "skip"
   );
 
-  const files = useQuery(
-    api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : "skip"
-  );
+  const files =
+    useQuery(
+      api.files.getFiles,
+      orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : "skip"
+    ) ?? [];
 
   const isLoading = files === undefined;
+
+  const modifiedFiles =
+    files?.map((file) => ({
+      ...file,
+      isFavorited: (favorites ?? []).some(
+        (favorite) => favorite.fileId === file._id
+      ),
+    })) ?? [];
 
   return (
     <div className="w-full">
@@ -60,14 +69,10 @@ export default function FileBrowser({
             <UploadButton />
           </div>
           {files?.length === 0 && <BgPlaceholder />}
-          <DataTable columns={columns} data={files} />
+          <DataTable columns={columns} data={modifiedFiles} />
           <div className="grid xs:grid-cols-2 md:grid-cols-3 gap-4">
-            {files?.map((file) => (
-              <FileCard
-                favorites={favorites ?? []}
-                key={file._id}
-                file={file}
-              />
+            {modifiedFiles?.map((file) => (
+              <FileCard key={file._id} file={file} />
             ))}
           </div>
         </>
