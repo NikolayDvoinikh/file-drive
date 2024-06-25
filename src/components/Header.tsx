@@ -10,7 +10,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="border-b py-5 sm:py-4 mb-4 bg-gray-50">
+    <header className="border-b py-5 sm:py-4 bg-gray-50">
       <div className="container mx-auto flex justify-between items-center">
         <Logo />
         <Button variant="outline">

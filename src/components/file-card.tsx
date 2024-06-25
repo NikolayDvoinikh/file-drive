@@ -40,7 +40,7 @@ export default function FileCard({
   });
 
   return (
-    <Card>
+    <Card className="flex flex-col justify-between">
       <CardHeader className="relative mb-2">
         <CardTitle className="flex gap-2 text-base font-normal">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
@@ -58,15 +58,15 @@ export default function FileCard({
         {file.type === "xlsx" && <FileSpreadsheetIcon className="w-20 h-20" />}
         {file.type === "docs" && <BookTypeIcon className="w-20 h-20" />}
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex gap-2 text-xs text-gray-700 w-40 items-center">
+      <CardFooter className="flex flex-col justify-between items-end">
+        <div className="text-end flex gap-2 text-[10px] md:text-sm text-gray-700 max-w-40 items-center">
           <Avatar className="w-6 h-6">
             <AvatarImage src={userProfile?.image} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {userProfile?.name}
         </div>
-        <div className="text-xs text-gray-700 capitalize">
+        <div className="text-end text-[10px] md:text-sm text-gray-700 capitalize">
           {formatRelative(new Date(file._creationTime), new Date())}
         </div>
       </CardFooter>

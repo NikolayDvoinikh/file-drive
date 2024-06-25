@@ -76,7 +76,7 @@ export default function FileCardActions({
       </AlertDialog>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <MoreVertical />
+          <MoreVertical className="ml-3" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem

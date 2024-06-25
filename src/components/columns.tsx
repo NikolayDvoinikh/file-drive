@@ -42,7 +42,7 @@ export const columns: ColumnDef<Doc<"files"> & { isFavorited: boolean }>[] = [
     header: "Uploaded on",
     cell: ({ row }) => {
       return (
-        <div>
+        <div className="capitalize">
           {formatRelative(new Date(row.original._creationTime), new Date())}
         </div>
       );
