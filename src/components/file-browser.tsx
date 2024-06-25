@@ -10,6 +10,8 @@ import { Loader2 } from "lucide-react";
 import SearchBar from "@/components/search-bar";
 import { useState } from "react";
 import BgPlaceholder from "@/components/bg-placeholder";
+import { DataTable } from "./file-table";
+import { columns } from "./columns";
 
 export default function FileBrowser({
   title,
@@ -38,6 +40,7 @@ export default function FileBrowser({
     api.files.getFiles,
     orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : "skip"
   );
+
   const isLoading = files === undefined;
 
   return (
@@ -57,6 +60,7 @@ export default function FileBrowser({
             <UploadButton />
           </div>
           {files?.length === 0 && <BgPlaceholder />}
+          <DataTable columns={columns} data={files} />
           <div className="grid xs:grid-cols-2 md:grid-cols-3 gap-4">
             {files?.map((file) => (
               <FileCard
