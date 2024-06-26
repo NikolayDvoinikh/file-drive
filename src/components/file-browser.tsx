@@ -71,7 +71,7 @@ export default function FileBrowser({
     })) ?? [];
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-5">
       <div className="flex flex-col gap-5 sm:gap-0 sm:flex-row items-center justify-between mb-6">
         <h1 className="text-4xl font-bold">{title}</h1>
         <SearchBar query={query} setQuery={setQuery} />
