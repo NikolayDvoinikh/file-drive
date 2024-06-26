@@ -3,9 +3,9 @@ import { v } from "convex/values";
 
 export const fileTypes = v.union(
   v.literal("image"),
-  v.literal("xlsx"),
+  v.literal("excel"),
   v.literal("pdf"),
-  v.literal("docs")
+  v.literal("msword")
 );
 
 export const roles = v.union(v.literal("admin"), v.literal("member"));

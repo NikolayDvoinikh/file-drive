@@ -74,8 +74,9 @@ export default function UploadButton() {
       "image/png": "image",
       "image/jpeg": "image",
       "application/pdf": "pdf",
-      "text/xlsx": "xlsx",
-      "text/docs": "docs",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        "excel",
+      "application/msword": "msword",
     } as Record<string, Doc<"files">["type"]>;
 
     try {
