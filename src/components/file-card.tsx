@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -10,8 +9,7 @@ import { formatRelative } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { ReactNode } from "react";
-import { Doc, Id } from "../../convex/_generated/dataModel";
-import { Button } from "./ui/button";
+import { Doc } from "../../convex/_generated/dataModel";
 import FileCardActions from "./file-card-actions";
 import {
   BookTypeIcon,
@@ -26,8 +24,8 @@ import { api } from "../../convex/_generated/api";
 const typeIcons = {
   image: <ImageIcon />,
   pdf: <FileTextIcon />,
-  xlsx: <FileSpreadsheetIcon />,
-  docs: <BookTypeIcon />,
+  excel: <FileSpreadsheetIcon />,
+  msword: <BookTypeIcon />,
 } as Record<Doc<"files">["type"], ReactNode>;
 
 export default function FileCard({
@@ -55,8 +53,8 @@ export default function FileCard({
           <Image alt={file.name} width={200} height={100} src={file.url} />
         )}
         {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
-        {file.type === "xlsx" && <FileSpreadsheetIcon className="w-20 h-20" />}
-        {file.type === "docs" && <BookTypeIcon className="w-20 h-20" />}
+        {file.type === "excel" && <FileSpreadsheetIcon className="w-20 h-20" />}
+        {file.type === "msword" && <BookTypeIcon className="w-20 h-20" />}
       </CardContent>
       <CardFooter className="flex flex-col justify-between items-end">
         <div className="text-end flex gap-2 text-[10px] md:text-sm text-gray-700 max-w-40 items-center">

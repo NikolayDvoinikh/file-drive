@@ -13,6 +13,15 @@ import BgPlaceholder from "@/components/bg-placeholder";
 import { DataTable } from "./file-table";
 import { columns } from "./columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Doc } from "../../convex/_generated/dataModel";
+import { Label } from "./ui/label";
 
 export default function FileBrowser({
   title,
@@ -26,6 +35,7 @@ export default function FileBrowser({
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
+  const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
 
   let orgId: string | undefined;
   if (organization.isLoaded && user.isLoaded) {
@@ -39,7 +49,15 @@ export default function FileBrowser({
 
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly, deletedOnly } : "skip"
+    orgId
+      ? {
+          orgId,
+          type: type === "all" ? undefined : type,
+          query,
+          favorites: favoritesOnly,
+          deletedOnly,
+        }
+      : "skip"
   );
 
   const isLoading = files === undefined;
@@ -61,16 +79,36 @@ export default function FileBrowser({
       </div>
 
       <Tabs defaultValue="grid">
-        <TabsList className="mb-4">
-          <TabsTrigger value="grid" className="flex gap-2 items-center">
-            <GridIcon />
-            Grid
-          </TabsTrigger>
-          <TabsTrigger value="table" className="flex gap-2 items-center">
-            <RowsIcon />
-            Table
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex flex-col justify-between items-center sm:items-start sm:flex-row">
+          <TabsList className="mb-4 max-w-[185px]">
+            <TabsTrigger value="grid" className="flex gap-2 items-center">
+              <GridIcon />
+              Grid
+            </TabsTrigger>
+            <TabsTrigger value="table" className="flex gap-2">
+              <RowsIcon />
+              Table
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="w-full flex justify-center sm:justify-end">
+            <Select
+              value={type}
+              onValueChange={(newType) => setType(newType as any)}
+            >
+              <SelectTrigger className="w-full max-w-[185px] sm:w-[185px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="excel">Excel</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="msword">Word</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
         {isLoading && (
           <div className="flex flex-col gap-8 w-full items-center mt-24">
