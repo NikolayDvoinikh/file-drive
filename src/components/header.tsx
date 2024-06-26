@@ -18,7 +18,7 @@ export default function Header() {
         </Link>
 
         <SignedIn>
-          <Button variant="outline">
+          <Button variant="outline" className="hidden min-[420px]:inline-flex">
             <Link href="/dashboard/files">Your Files</Link>
           </Button>
         </SignedIn>

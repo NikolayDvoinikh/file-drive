@@ -28,7 +28,7 @@ export default function SideNav() {
   const pathanme = usePathname();
 
   return (
-    <nav className="w-40 flex flex-col gap-4">
+    <nav className="w-40 min-h-[calc(100vh-226px)] flex flex-col gap-4">
       {routes.map((route) => (
         <Link href={route.path} key={route.name}>
           <Button

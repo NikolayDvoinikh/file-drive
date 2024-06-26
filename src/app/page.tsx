@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-[calc(100vh-226px)]">
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -17,7 +17,7 @@ export default function HomePage() {
             }}
           />
         </div>
-        <div className="mx-auto max-w-2xl py-8">
+        <div className="mx-auto max-w-2xl pb-5">
           <div className="text-center">
             <Image
               src="/logo.png"
@@ -51,7 +51,7 @@ export default function HomePage() {
           </div>
         </div>
         <div
-          className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+          className="absolute inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl"
           aria-hidden="true"
         >
           <div

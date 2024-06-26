@@ -23,7 +23,7 @@ const footerLinks: { name: string | JSX.Element; path: string }[] = [
 export default function Footer() {
   return (
     <footer className="bg-gray-100 relative z-10 mt-auto">
-      <div className="container py-10 px-5">
+      <div className="container py-10 px-5 sm:px-10">
         <ul className="mx-auto flex justify-between items-center">
           {footerLinks.map((link) => {
             return (
