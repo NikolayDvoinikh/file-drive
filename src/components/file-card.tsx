@@ -38,7 +38,7 @@ export default function FileCard({
   });
 
   return (
-    <Card className="flex flex-col justify-between">
+    <Card className="flex flex-col justify-between max-w-[300px]">
       <CardHeader className="relative mb-2">
         <CardTitle className="flex gap-2 text-base font-normal">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
@@ -48,9 +48,15 @@ export default function FileCard({
           <FileCardActions isFavorited={file.isFavorited} file={file} />
         </div>
       </CardHeader>
-      <CardContent className="h-25 flex justify-center items-center">
+      <CardContent className="flex max-h-44 justify-center items-center">
         {file.type === "image" && (
-          <Image alt={file.name} width={200} height={100} src={file.url} />
+          <Image
+            alt={file.name}
+            width={150}
+            height={180}
+            className="max-h-full w-auto"
+            src={file.url}
+          />
         )}
         {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
         {file.type === "excel" && <FileSpreadsheetIcon className="w-20 h-20" />}
