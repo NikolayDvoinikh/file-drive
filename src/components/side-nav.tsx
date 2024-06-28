@@ -28,12 +28,16 @@ export default function SideNav() {
   const pathanme = usePathname();
 
   return (
-    <nav className="w-40 min-h-[calc(100vh-226px)] flex flex-col gap-4">
+    <nav className="fixed z-20 flex-wrap sm:flex-nowrap bg-white flex top-[69px] min-[420px]:top-[81px] px-3 py-2 sm:p-0 left-0 w-full xs:gap-3 sm:w-40 sm:static sm:flex-col">
       {routes.map((route) => (
-        <Link href={route.path} key={route.name}>
+        <Link
+          className="even:flex-grow xs:even:flex-grow-0"
+          href={route.path}
+          key={route.name}
+        >
           <Button
             variant={"link"}
-            className={clsx("flex gap-2", {
+            className={clsx("flex gap-2 px-1 sm:px-0 mx-auto", {
               "text-blue-600": pathanme.includes(route.path),
             })}
           >

@@ -38,8 +38,8 @@ export default function FileCard({
   });
 
   return (
-    <Card className="flex flex-col justify-between max-w-[300px]">
-      <CardHeader className="relative mb-2">
+    <Card className="mx-auto flex flex-col justify-between max-w-[300px]">
+      <CardHeader className="relative">
         <CardTitle className="flex gap-2 text-base font-normal">
           <div className="flex justify-center">{typeIcons[file.type]}</div>
           {file.name}
@@ -48,12 +48,12 @@ export default function FileCard({
           <FileCardActions isFavorited={file.isFavorited} file={file} />
         </div>
       </CardHeader>
-      <CardContent className="flex max-h-44 justify-center items-center">
+      <CardContent className="flex max-h-96 justify-center items-center">
         {file.type === "image" && (
           <Image
             alt={file.name}
-            width={150}
-            height={180}
+            width={200}
+            height={200}
             className="max-h-full w-auto"
             src={file.url}
           />
