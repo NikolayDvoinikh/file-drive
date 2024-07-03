@@ -28,7 +28,7 @@ export default function SideNav() {
   const pathanme = usePathname();
 
   return (
-    <nav className="fixed z-20 flex-wrap sm:flex-nowrap bg-white flex top-[69px] min-[420px]:top-[81px] px-3 py-2 sm:p-0 left-0 w-full xs:gap-3 sm:w-40 sm:static sm:flex-col">
+    <nav className="fixed z-20 flex-wrap bg-white flex top-[69px] min-[420px]:top-[81px] px-3 py-2 left-0 w-full xs:gap-3 sm:p-0 sm:flex-nowrap sm:items-start sm:w-40 sm:static sm:flex-col">
       {routes.map((route) => (
         <Link
           className="even:flex-grow xs:even:flex-grow-0"
